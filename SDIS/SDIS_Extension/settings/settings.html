@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDIS Lite Settings</title>
+    <style>
+        /* Minimal styling for the settings page */
+        body {
+            font-family: 'Inter', sans-serif;
+            width: 400px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 10px 0;
+        }
+        .label-group {
+            flex-grow: 1;
+        }
+        .setting-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .setting-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .status-success {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-800 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SDIS Lite - Settings</h1>
+
+        <div class="setting-item">
+            <div class="label-group">
+                <div class="setting-label">Enable Real-Time Risk Scanning</div>
+                <div class="setting-description">If disabled, the extension will not monitor or alert on sensitive data entry.</div>
+            </div>
+            <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 28px;">
+                <input type="checkbox" id="riskScanningToggle" style="opacity: 0; width: 0; height: 0;">
+                <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px;"></span>
+            </label>
+        </div>
+
+        <div id="statusMessage" class="status-message status-success">Settings Saved!</div>
+    </div>
+
+    <script src="../utils/utils.js"></script>
+    <script src="./settings.js"></script>
+
+    <script>
+        // Custom CSS for the toggle switch look
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .switch input:checked + .slider {
+                background-color: #4f46e5; /* Indigo-600 */
+            }
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 20px;
+                width: 20px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+            .switch input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

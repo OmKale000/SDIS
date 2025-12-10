@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDIS Sentinel</title>
+    <script src="../utils/utils.js"></script>
+    <script src="popup.js" defer></script>
+    <style>
+        /* Modern Inter Font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            width: 340px; /* Slightly wider for better alignment */
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+            color: #1f2937; /* Gray-800 */
+            background-color: #f0f4f8; /* Light Sky Blue for contrast */
+            overflow: hidden; /* Prevent scroll on view switch */
+        }
+        
+        /* Dark Mode Styles */
+        body.dark {
+            background-color: #0d121c; /* Deep Dark Blue */
+            color: #ecf0f1; /* Light Gray */
+        }
+        body.dark .card {
+            background: #1c2536; /* Darker Card Background */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+        }
+        body.dark .header-title {
+            color: #ffffff;
+        }
+        body.dark .metric-item h4 {
+            color: #aeb6bf; /* Grayed text */
+        }
+        body.dark .metric-item p {
+            color: #ffffff; /* White text for contrast */
+        }
+        body.dark .btn-secondary {
+            background-color: #2c3e50; /* Darker Secondary Button */
+            color: #ecf0f1;
+        }
+        body.dark .btn-secondary:hover {
+            background-color: #34495e;
+        }
+        body.dark .settings-item {
+            border-bottom: 1px solid #34495e;
+        }
+        body.dark .header {
+            border-bottom: 1px solid #34495e;
+        }
+        body.dark #risk-log-container > div {
+            border-bottom: 1px solid #34495e !important;
+        }
+        body.dark #risk-log-container .log-text {
+            color: #aeb6bf !important;
+        }
+        body.dark #no-risk-message {
+            color: #6b7280 !important;
+        }
+
+
+        .container {
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0b1a32;
+            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        /* Card and Metrics */
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .metric-item {
+            padding: 10px 0;
+        }
+        .metric-item h4 {
+            margin: 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        .metric-item p {
+            margin: 5px 0 0 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .risk-status {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 10px;
+            padding-left: 2px;
+        }
+
+        /* Buttons and Actions */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #3b82f6, #1e40af); /* Blue Gradient */
+            color: white;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        /* Settings View Specific */
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .settings-item label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #3b82f6; }
+        input:focus + .slider { box-shadow: 0 0 1px #3b82f6; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Message Box */
+        .message-box {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #10b981;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header (Shared between views) -->
+        <div class="header">
+            <div id="header-title-text" class="header-title">SDIS Sentinel</div>
+            <div class="header-actions">
+                <button id="dark-mode-toggle" class="btn btn-secondary" title="Toggle Dark Mode">
+                    <span id="dark-mode-icon" style="font-size: 18px;">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Dashboard View -->
+        <div id="dashboard-view">
+            
+            <div class="card">
+                <h3 style="font-size: 1rem; font-weight: 700; margin-top: 0; margin-bottom: 15px; color: #4b5563;">REAL-TIME PROTECTION</h3>
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <h4>RISKS DETECTED TODAY</h4>
+                        <p id="risks-detected">0</p>
+                    </div>
+                    <div class="metric-item">
+                        <h4>CURRENT RISK SCORE</h4>
+                        <p id="risk-score">0%</p>
+                    </div>
+                </div>
+                <div class="risk-status">
+                    <span id="risk-status-text" style="color: #10b981;">🟢 All Clear</span>
+                </div>
+            </div>
+            
+            <!-- The Fogg Behavior Model Philosophy Card has been removed as requested. -->
+
+            <h3 style="font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 12px; color: #4b5563;">RECENT RISK ACTIVITY</h3>
+            <!-- New Risk Log Section -->
+            <div class="card" style="padding: 10px 20px;">
+                <div id="risk-log-container">
+                    <!-- Log entries will be rendered here by JS -->
+                    <p id="no-risk-message" style="text-align: center; color: #9ca3af; font-size: 0.9rem; margin: 10px 0;">No risks detected recently. Keep up the secure habits!</p>
+                </div>
+            </div>
+
+
+            <h3 style="font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 12px; color: #4b5563;">ONE-TAP CLEANUP</h3>
+            <div class="action-grid">
+                <button id="clean-cookies-btn" class="btn btn-primary">
+                    🍪 Clean Cookies (Current Site)
+                </button>
+                <button id="clean-autofill-btn" class="btn btn-primary">
+                    🗑️ Clean Autofill (Browser)
+                </button>
+            </div>
+            
+            <button id="settings-footer-btn" class="btn btn-secondary" style="margin-top: 20px; width: 100%;">
+                ⚙️ Settings & Configuration
+            </button>
+            
+        </div>
+        
+        <!-- Settings View (Initially Hidden) -->
+        <div id="settings-view" class="hidden">
+            
+            <div class="card">
+                <h3 style="font-size: 1rem; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: #4b5563;">SCANNING CONTROLS</h3>
+                
+                <div class="settings-item">
+                    <label for="scanning-toggle">Enable Real-Time Risk Scanning</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="scanning-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item">
+                    <label for="dark-mode-settings-toggle">Enable Dark Mode</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dark-mode-settings-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="card">
+                 <h3 style="font-size: 1rem; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: #4b5563;">APP INFO</h3>
+                 <!-- <p style="font-size: 0.9rem; margin: 0 0 5px 0;">SDIS Sentinel v1.2</p> -->
+                 <p style="font-size: 0.9rem; margin: 0;">Protection Engine: SDIS</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="message-box" class="message-box"></div>
+</body>
+</html>

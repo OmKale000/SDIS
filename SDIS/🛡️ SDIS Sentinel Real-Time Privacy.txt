@@ -1,0 +1,86 @@
+🛡️ SDIS Sentinel: Real-Time Privacy Protection for Smarter Browsing
+Short Description (for GitHub repo header)
+
+A Chrome Extension that provides real-time, intelligent privacy protection — detecting risky user behavior, analyzing sensitive data exposure, and enabling one-tap cleanup for a safer digital experience.
+
+📘 Full Repository Description (for README.md)
+🛡️ SDIS Sentinel – Real-Time Privacy Protection Chrome Extension
+
+SDIS Sentinel is an advanced Chrome extension designed to make web browsing more secure, transparent, and user-aware.
+It bridges the passive security gap by monitoring real-time user interactions — alerting users before personal or sensitive data is exposed, and offering one-tap cleanup tools for instant privacy maintenance.
+
+🚨 Why SDIS Sentinel?
+
+Modern browsers protect users from known threats, but not from risky behavior at the point of interaction.
+Users frequently copy, type, or submit sensitive data (emails, passwords, credit card numbers, DOBs, etc.) on sites that may be insecure or untrusted.
+
+SDIS Sentinel solves this problem by transforming your browser into an active privacy guardian, providing intelligent alerts and actionable controls.
+
+🧠 Core Features
+Category	Feature	Description
+🧩 Intelligent Detection	Gemini AI Risk Scoring	Uses Gemini API for advanced contextual risk analysis and generates detailed risk scores (0–100).
+🔐 Clipboard Leak Prevention	Detects PII in clipboard content and clears it automatically, preventing accidental data exposure.	
+🧾 Real-Time Feedback	Scans all input fields and warns users instantly when personal data is detected (email, phone, credit card, etc.).	
+🧹 Proactive Cleanup	One-Tap Cleanup buttons let users instantly clear cookies and autofill data for the current site.	
+⚠️ Insecure Site Warning	Displays a warning banner on HTTP (non-secure) sites to discourage unsafe submissions.	
+📊 Behavioral Metrics	Displays a daily privacy dashboard with total risks, total inputs, and real-time risk score.	
+🕒 Recent Activity Log	Shows the last 5 detected high-risk actions with timestamps and risk context.	
+🏗️ Architecture Overview
+
+The project is structured into four modular components for clarity and scalability:
+
+Module	File(s)	Description
+Content Sentinel	content/content.js	Injected into all pages. Performs regex-based scanning on inputs, clipboard monitoring, and form submissions.
+Background AI Processor	service_worker.js	Central service worker that manages state, runs Gemini AI risk analysis, and handles data flow.
+Dashboard & UX	popup/popup.html, popup/popup.js	User-facing dashboard showing risk metrics, activity logs, and cleanup buttons.
+Storage Utilities	utils/utils.js	Asynchronous storage wrappers for safe and consistent data operations.
+⚙️ Tech Stack
+Component	Technology	Purpose
+Architecture	Chrome Extension V3	Extension runtime environment (service worker + content scripts).
+AI Engine	Gemini API (2.5-flash-preview-05-20)	Provides intelligent risk scoring and contextual analysis.
+Language	JavaScript (ES6+)	Core scripting language across all modules.
+UI & Styling	HTML5, CSS3	Responsive and minimalistic dashboard and alerts.
+Storage	chrome.storage.local	Persists user data, settings, and daily risk metrics.
+💡 How It Works
+
+Content Sentinel continuously monitors your browsing inputs and clipboard events.
+
+When risky data is detected, real-time alerts appear near the input field.
+
+The Background Processor logs risk events and sends data for AI-based risk scoring.
+
+The Dashboard aggregates this information into a simple, daily privacy overview.
+
+Users can instantly clean cookies and autofill data with one tap.
+
+🧭 Vision
+
+SDIS Sentinel is built to educate and empower users to develop safer browsing habits.
+By making privacy risks visible and actionable, it helps close the behavioral security gap that traditional web protection misses.
+
+🧰 Future Enhancements
+
+🔄 Domain-Based Risk Profiles
+
+🧩 Extension Sync Across Devices
+
+🧠 Deeper AI Explanations for Each Risk Event
+
+📈 Weekly Privacy Insights Dashboard
+
+📂 Repository Structure
+SDIS-Sentinel/
+│
+├── content/
+│   └── content.js
+├── popup/
+│   ├── popup.html
+│   ├── popup.js
+│   └── popup.css
+├── utils/
+│   └── utils.js
+├── service_worker.js
+├── manifest.json
+├── README.md
+└── icons/
+    └── (extension icons)
