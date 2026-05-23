@@ -2,6 +2,7 @@
 
 A Chrome extension that delivers real-time, intelligent privacy protection by detecting risky user behavior, analyzing sensitive data exposure, and providing one-tap cleanup tools for a safer digital experience.
 
+Live link: https://sdisbythe404founder.netlify.app/
 ---
 
 ## 🚨 Why SDIS Sentinel?
